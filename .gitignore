@@ -3,3 +3,5 @@
 *.log
 tmp/
 bin/
+.cache
+compile_commands.json
