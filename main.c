@@ -61,6 +61,12 @@ int main(void) {
     BeginDrawing();
     Color gruvbox_background = GetColor(0x282828AA);
     ClearBackground(gruvbox_background);
+    Vector2 origin = GetOrigin(-2, -10, 4, -4);
+    DrawCircleV(origin, 10, RAYWHITE);
+
+    Vector2 test_data[5] = {{-2, -4}, {-4, -2}, {-6, -0}, {-8, 2}, {-10, 4}};
+
+    DrawPoints(test_data, origin, RED, 5);
 
     EndDrawing();
   }
