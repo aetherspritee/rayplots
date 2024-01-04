@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "raymath.h"
+#include <math.h>
 #include <stdio.h>
 
 // blank space at window edges in pixels
@@ -29,12 +30,12 @@ const int BORDER_Y2 = 10 + BORDER_OUTLINE_Y2;
 // 9. multiple plots in a single window
 
 // FIXME: current test case doesnt work
-Vector2 GetOrigin(int max_x, int min_x, int max_y, int min_y) {
+Vector2 GetOrigin(Vector2 min, Vector2 max) {
   Vector2 origin;
-  if (min_x < 0 && max_x < 0) {
+  if (min.x < 0 && max.x < 0) {
     // x axis from very right to left
     origin.x = GetScreenWidth() - BORDER_X2;
-  } else if (min_x > 0) {
+  } else if (min.x > 0) {
     // x axis from middle to left and right
     origin.x = BORDER_X1;
   } else {
@@ -42,10 +43,10 @@ Vector2 GetOrigin(int max_x, int min_x, int max_y, int min_y) {
     origin.x = (GetScreenWidth() - BORDER_X1 - BORDER_X2) / 2 + BORDER_X1;
   }
 
-  if (min_y < 0 && max_y < 0) {
+  if (min.y < 0 && max.y < 0) {
     // y axis from very top to bottom
     origin.y = BORDER_Y1;
-  } else if (min_y > 0) {
+  } else if (min.y > 0) {
     // y axis from middle to top and bottom
     origin.y = GetScreenHeight() - BORDER_Y2;
   } else {
@@ -80,9 +81,31 @@ void DrawPoints(Vector2 *data, Vector2 origin, Color color, int marker_size) {
   }
 }
 
-float GetDataMin(Vector2 *data) { return 1.0; }
+Vector2 GetDataMin(Vector2 *data) {
+  Vector2 min = {INFINITY, INFINITY};
+  for (int i = 0; i < sizeof(&data) - 1; i++) {
+    if (data[i].x < min.x) {
+      min.x = data[i].x;
+    }
+    if (data[i].y < min.y) {
+      min.y = data[i].y;
+    }
+  }
+  return min;
+}
 
-float GetDataMax(Vector2 *data) { return 1.0; }
+Vector2 GetDataMax(Vector2 *data) {
+  Vector2 max = {-INFINITY, -INFINITY};
+  for (int i = 0; i < sizeof(&data) - 1; i++) {
+    if (data[i].x > max.x) {
+      max.x = data[i].x;
+    }
+    if (data[i].y > max.y) {
+      max.y = data[i].y;
+    }
+  }
+  return max;
+}
 // additional behaviour i want:
 // - axes
 // - place points on the window in a way that respects the axes
@@ -99,11 +122,10 @@ int main(void) {
     Color gruvbox_background = GetColor(0x282828AA);
     ClearBackground(gruvbox_background);
     DrawBorder(RAYWHITE);
-    Vector2 origin = GetOrigin(-20, -100, 40, -40);
+    Vector2 test_data[] = {{-20, -40}, {-40, -20}, {-60, 0},  {-80, 20},
+                           {-100, 40}, {0, 0},     {-50, 50}, {100, 100}};
+    Vector2 origin = GetOrigin(GetDataMin(test_data), GetDataMax(test_data));
     DrawCircleV(origin, 10, RAYWHITE);
-
-    Vector2 test_data[] = {{-20, -40}, {-40, -20}, {-60, 0}, {-80, 20},
-                           {-100, 40}, {0, 0},     {-50, 50}};
 
     DrawPoints(test_data, origin, RED, 5);
 
