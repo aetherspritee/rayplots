@@ -75,11 +75,14 @@ Vector2 CoordinateTransform(Vector2 origin, Vector2 data) {
 }
 
 void DrawPoints(Vector2 *data, Vector2 origin, Color color, int marker_size) {
-  for (int i = 0; i < sizeof(&data); i++) {
+  for (int i = 0; i < sizeof(&data) - 1; i++) {
     DrawCircleV(CoordinateTransform(origin, data[i]), marker_size, color);
   }
 }
 
+float GetDataMin(Vector2 *data) { return 1.0; }
+
+float GetDataMax(Vector2 *data) { return 1.0; }
 // additional behaviour i want:
 // - axes
 // - place points on the window in a way that respects the axes
@@ -96,10 +99,11 @@ int main(void) {
     Color gruvbox_background = GetColor(0x282828AA);
     ClearBackground(gruvbox_background);
     DrawBorder(RAYWHITE);
-    Vector2 origin = GetOrigin(-2, -10, 4, -4);
+    Vector2 origin = GetOrigin(-20, -100, 40, -40);
     DrawCircleV(origin, 10, RAYWHITE);
 
-    Vector2 test_data[5] = {{-2, -4}, {-4, -2}, {-6, -0}, {-8, 2}, {-10, 4}};
+    Vector2 test_data[] = {{-20, -40}, {-40, -20}, {-60, 0}, {-80, 20},
+                           {-100, 40}, {0, 0},     {-50, 50}};
 
     DrawPoints(test_data, origin, RED, 5);
 
