@@ -69,21 +69,19 @@ void DrawBorder(Color color) {
            GetScreenHeight() - BORDER_OUTLINE_Y2, color);
 }
 
-Vector2 CoordinateTransform(Vector2 origin, Vector2 data) {
+Vector2 CoordinateTransform(Vector2 origin, Vector2 data, Vector2 *max) {
   // transform the data such that it is relative to the given origin
+  // TODO: make sure points are normalized, therefore always shown within the
+  // max.x = od_x1 bzw od_x2
+  // max.y = od_y1 bzw od_y2
   Vector2 transformed_data = {origin.x + data.x, origin.y - data.y};
+  /* transformed_data.x = (transformed_data.x/max->x)*; */
   return transformed_data;
-}
-
-void DrawPoints(Vector2 *data, Vector2 origin, Color color, int marker_size) {
-  for (int i = 0; i < sizeof(&data) - 1; i++) {
-    DrawCircleV(CoordinateTransform(origin, data[i]), marker_size, color);
-  }
 }
 
 Vector2 GetDataMin(Vector2 *data) {
   Vector2 min = {INFINITY, INFINITY};
-  for (int i = 0; i < sizeof(&data) - 1; i++) {
+  for (int i = 0; i < sizeof(&data); i++) {
     if (data[i].x < min.x) {
       min.x = data[i].x;
     }
@@ -96,7 +94,7 @@ Vector2 GetDataMin(Vector2 *data) {
 
 Vector2 GetDataMax(Vector2 *data) {
   Vector2 max = {-INFINITY, -INFINITY};
-  for (int i = 0; i < sizeof(&data) - 1; i++) {
+  for (int i = 0; i < sizeof(&data); i++) {
     if (data[i].x > max.x) {
       max.x = data[i].x;
     }
@@ -106,6 +104,21 @@ Vector2 GetDataMax(Vector2 *data) {
   }
   return max;
 }
+
+void DrawPoints(Vector2 *data, Vector2 origin, Color color, int marker_size,
+                Vector2 *max) {
+  for (int i = 0; i < sizeof(&data); i++) {
+    if (data[i].x > max->x) {
+      max->x = data[i].x;
+    }
+
+    if (data[i].y > max->y) {
+      max->y = data[i].y;
+    }
+    DrawCircleV(CoordinateTransform(origin, data[i], max), marker_size, color);
+  }
+}
+
 // additional behaviour i want:
 // - axes
 // - place points on the window in a way that respects the axes
@@ -114,6 +127,7 @@ Vector2 GetDataMax(Vector2 *data) {
 // - panning (3d atleast)
 
 int main(void) {
+  Vector2 MaximumValues = {-INFINITY, -INFINITY};
   SetConfigFlags(FLAG_WINDOW_RESIZABLE);
   InitWindow(400, 224, "rayplot");
 
