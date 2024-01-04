@@ -39,7 +39,7 @@ Vector2 GetOrigin(int max_x, int min_x, int max_y, int min_y) {
     origin.x = BORDER_X1;
   } else {
     // x axis from left to right
-    origin.x = GetScreenWidth() / 2;
+    origin.x = (GetScreenWidth() - BORDER_X1 - BORDER_X2) / 2 + BORDER_X1;
   }
 
   if (min_y < 0 && max_y < 0) {
@@ -50,7 +50,7 @@ Vector2 GetOrigin(int max_x, int min_x, int max_y, int min_y) {
     origin.y = GetScreenHeight() - BORDER_Y2;
   } else {
     // y axis from very bottom to top
-    origin.y = GetScreenHeight() / 2;
+    origin.y = (GetScreenHeight() - BORDER_Y1 - BORDER_Y2) / 2 + BORDER_Y1;
   }
   return origin;
 }
