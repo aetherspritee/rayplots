@@ -32,18 +32,18 @@ const int BORDER_Y2 = 10 + BORDER_OUTLINE_Y2;
 // FIXME: current test case doesnt work
 Vector2 GetOrigin(Vector2 min, Vector2 max) {
   Vector2 origin;
-  if (min.x < 0 && max.x < 0) {
+  if (min.x < 0 && max.x <= 0) {
     // x axis from very right to left
     origin.x = GetScreenWidth() - BORDER_X2;
   } else if (min.x > 0) {
-    // x axis from middle to left and right
+    // x axis from left to right
     origin.x = BORDER_X1;
   } else {
-    // x axis from left to right
+    // x axis from middle to left and right
     origin.x = (GetScreenWidth() - BORDER_X1 - BORDER_X2) / 2 + BORDER_X1;
   }
 
-  if (min.y < 0 && max.y < 0) {
+  if (min.y < 0 && max.y <= 0) {
     // y axis from very top to bottom
     origin.y = BORDER_Y1;
   } else if (min.y > 0) {
@@ -136,12 +136,12 @@ int main(void) {
     Color gruvbox_background = GetColor(0x282828AA);
     ClearBackground(gruvbox_background);
     DrawBorder(RAYWHITE);
-    Vector2 test_data[] = {{-20, -40}, {-40, -20}, {-60, 0},  {-80, 20},
-                           {-100, 40}, {0, 0},     {-50, 50}, {100, 100}};
+    Vector2 test_data[] = {{-20, -40},  {-40, -20}, {-60, -10}, {-80, -20},
+                           {-100, -40}, {0, 0},     {-50, -50}, {100, -100}};
     Vector2 origin = GetOrigin(GetDataMin(test_data), GetDataMax(test_data));
     DrawCircleV(origin, 10, RAYWHITE);
 
-    DrawPoints(test_data, origin, RED, 5);
+    DrawPoints(test_data, origin, RED, 5, &MaximumValues);
 
     EndDrawing();
   }
