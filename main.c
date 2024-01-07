@@ -47,10 +47,62 @@ void DrawBorder(Color color) {
            GetScreenHeight() - BORDER_OUTLINE_Y2, color);
 }
 
+void DrawHandler(Vector2 new_data, Vector2 *data[]) {
+  // keeps track of all added points
+  // re-calculates origin based on new points
+  // redraws coordinate system
+  // adds new points
+}
+
+int CreatePlot(Vector2 new_data[], int data_length) {
+  // i want this to automatically create the array that tracks all data
+  // such that you only pass new data to it
+  /* for (int i = 0; i < size; i++) { */
+  /*   printf("%f,%f\n", data[i].x, data[i].y); */
+  /* } */
+  size = data_elements + data_length;
+  /* size *= 2; */
+  data = realloc(data, size * sizeof(Vector2));
+  if (data == NULL) {
+    printf("Array not allocated!");
+    return 1;
+  }
+
+  int el_copy = data_elements;
+  int curr_data_elements = 0;
+  for (int i = el_copy; i < el_copy + data_length; i++) {
+    /* printf("%i\n", i - data_length); */
+    data[i].x = new_data[curr_data_elements].x;
+    data[i].y = new_data[curr_data_elements].y;
+    curr_data_elements += 1;
+  }
+  data_elements += curr_data_elements;
+
+  return 0;
+}
+
 int main(void) {
+  data = calloc(size, sizeof(Vector2));
+  if (data == NULL) {
+    printf("Array not allocated!");
+    return 1;
+  }
   Vector2 MaximumValues = {-INFINITY, -INFINITY};
   SetConfigFlags(FLAG_WINDOW_RESIZABLE);
   InitWindow(400, 224, "rayplot");
+
+  Vector2 data_down_left[] = {{-20, -40}, {-40, -20},  {-60, -10},
+                              {-80, -20}, {-100, -40}, {0, 0},
+                              {-50, -50}, {-30, -30},  {-30, -40}};
+
+  unsigned long data_size = sizeof(data_down_left) / sizeof(data_down_left[0]);
+
+  CreatePlot(data_down_left, data_size);
+
+  Vector2 test_up_both[] = {{-200, 400}, {-400, 200}, {600, 100}, {80, 200}};
+  unsigned long data_size2 = sizeof(test_up_both) / sizeof(test_up_both[0]);
+
+  CreatePlot(test_up_both, data_size2);
 
   while (!WindowShouldClose()) {
     BeginDrawing();
@@ -58,34 +110,23 @@ int main(void) {
     ClearBackground(gruvbox_background);
     DrawBorder(RAYWHITE);
 
-    Vector2 test_data[] = {{-20, -40},  {-40, -20}, {-60, -10}, {-80, -20},
-                           {-100, -40}, {0, 0},     {-50, -50}, {100, 100},
-                           {100, -100}, {-30, -30}, {-30, 40}};
-
-    unsigned long data_size = sizeof(test_data) / sizeof(test_data[0]);
-
-    Vector2 origin = GetOrigin(GetDataMin(test_data, data_size),
-                               GetDataMax(test_data, data_size));
+    Vector2 origin = GetOrigin(GetDataMin(data_down_left, data_size),
+                               GetDataMax(data_down_left, data_size));
     DrawCoordinateSystem(origin, MaximumValues);
     /* DrawCircleV(origin, 3, RAYWHITE); */
 
-    DrawPoints2D(test_data, origin, RED, 2, &MaximumValues, data_size);
+    DrawPoints2D(data_down_left, origin, RED, 2, &MaximumValues, data_size);
 
-    Vector2 test_data2[] = {
-        {-200, -400}, {-400, -200}, {-600, -100}, {-80, -200}};
-    unsigned long data_size2 = sizeof(test_data2) / sizeof(test_data2[0]);
+    Vector2 test_up_both[] = {{-200, 400}, {-400, 200}, {600, 100}, {80, 200}};
+    unsigned long data_size2 = sizeof(test_up_both) / sizeof(test_up_both[0]);
 
-    DrawPoints2D(test_data2, origin, RED, 2, &MaximumValues, data_size2);
-
-    int val = 10;
-    Vector2 text_coords =
-        CoordinateTransform(origin, CLITERAL(Vector2){50, 50}, &MaximumValues);
-    DrawText(TextFormat("%d", val), text_coords.x, text_coords.y, 4, RAYWHITE);
+    DrawPoints2D(test_up_both, origin, RED, 2, &MaximumValues, data_size2);
 
     EndDrawing();
   }
 
   CloseWindow();
 
+  free(data);
   return 0;
 }
