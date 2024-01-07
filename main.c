@@ -3,6 +3,7 @@
 #include "rayplots_2d.h"
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 // blank space at window edges in pixels
 #define BORDER_OUTLINE_X1 10
@@ -16,12 +17,19 @@
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
+int size = 1;
+Vector2 *data;
+int data_elements = 0;
+
 // the plan:
-// 1. 2d scatter plots
+// 1. 2d scatter plots [DONE]
 //    - automatically scaling points to fill the whole screen
 //    - automatically place origin to use space most efficiently
-// 3. axes (2d/3d), all points should respect it
-// 2. 3d scatter plots
+//    - TODO: keep track of all drawn points, update them and origin every time
+//            new points are added
+// 2. Write functions to automatically handle everything
+// 2. axes (2d/3d), all points should respect it [DONE]
+// 3. 3d scatter plots
 // 4. line plots
 // 5. surface plots
 // 6. bring opacity into the equation
