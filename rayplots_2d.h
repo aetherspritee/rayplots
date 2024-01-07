@@ -127,7 +127,6 @@ void DrawCoordinateSystemMarkersX(Vector2 x_axis, Vector2 origin, Vector2 max) {
   DrawMarkerX(CLITERAL(Vector2){x_axis.y, origin.y}, length);
 
   // draw number markers
-  // TODO: place numbers more symmetrically
   int step_size = max.x / (NumOfValuesToDisplayX / 2);
   for (int i = 0; i <= max.x; i += step_size) {
     Vector2 pos = CoordinateTransform(origin, CLITERAL(Vector2){i, 0}, &max);

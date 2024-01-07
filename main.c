@@ -25,10 +25,11 @@ int data_elements = 0;
 // 1. 2d scatter plots [DONE]
 //    - automatically scaling points to fill the whole screen
 //    - automatically place origin to use space most efficiently
-//    - TODO: keep track of all drawn points, update them and origin every time
-//            new points are added
+//    - TODO: update points and origin every time new points are added
 // 2. Write functions to automatically handle everything
-// 2. axes (2d/3d), all points should respect it [DONE]
+// 2. axes (2d/3d), all points should respect it
+//    - TODO: make axis merge with borders
+//    - TODO: place numbers smarter
 // 3. 3d scatter plots
 // 4. line plots
 // 5. surface plots
@@ -62,14 +63,11 @@ void DrawHandler(Vector2 new_data, Vector2 *data[]) {
   // adds new points
 }
 
+// FIXME: this needs to track a plot or smth
 int CreatePlot(Vector2 new_data[], int data_length) {
   // i want this to automatically create the array that tracks all data
   // such that you only pass new data to it
-  /* for (int i = 0; i < size; i++) { */
-  /*   printf("%f,%f\n", data[i].x, data[i].y); */
-  /* } */
   size = data_elements + data_length;
-  /* size *= 2; */
   data = realloc(data, size * sizeof(Vector2));
   if (data == NULL) {
     printf("Array not allocated!");
@@ -85,6 +83,11 @@ int CreatePlot(Vector2 new_data[], int data_length) {
     curr_data_elements += 1;
   }
   data_elements += curr_data_elements;
+
+  // recalculate min/max
+  // recalculate origin
+  // redraw coordinate system
+  // add all points into plot
 
   return 0;
 }
