@@ -158,17 +158,14 @@ void DrawCoordinateSystemMarkersY(Vector2 y_axis, Vector2 origin, Vector2 max) {
   int step_size = max.y / (NumOfValuesToDisplayY / 2);
   for (int i = 0; i <= max.y; i += step_size) {
     Vector2 pos = CoordinateTransform(origin, CLITERAL(Vector2){0, i}, &max);
-    printf("1 drawing at %f,%f\n", pos.x, pos.y);
-    DrawMarkerY(CLITERAL(Vector2){pos.y, origin.x}, 2);
+    DrawMarkerY(CLITERAL(Vector2){pos.y, origin.x}, 5);
     // draw number
     DrawText(TextFormat("%d", i), pos.x, pos.y, 4, RAYWHITE);
   }
 
   for (int i = 0; i >= -max.y; i -= step_size) {
     Vector2 pos = CoordinateTransform(origin, CLITERAL(Vector2){0, i}, &max);
-
-    printf("2 drawing at %f,%f\n", pos.x, pos.y);
-    DrawMarkerY(CLITERAL(Vector2){pos.y, origin.x}, 2);
+    DrawMarkerY(CLITERAL(Vector2){pos.y, origin.x}, 5);
     // draw number
     DrawText(TextFormat("%d", i), pos.x, pos.y, 4, RAYWHITE);
   }
@@ -182,12 +179,12 @@ void DrawCoordinateSystem(Vector2 origin, Vector2 max) {
   startPosX.y = origin.y;
   endPosX.y = origin.y;
   if (origin.x == BORDER_X1) {
-    endPosX.x = GetScreenWidth() - BORDER_X2 + BORDER_OUTLINE_X2 / 2;
+    endPosX.x = GetScreenWidth() - BORDER_X2 + BORDER_OUTLINE_X2;
   } else if (origin.x == GetScreenWidth() - BORDER_X2) {
-    endPosX.x = BORDER_X1 - BORDER_OUTLINE_X1 / 2;
+    endPosX.x = BORDER_X1 - BORDER_OUTLINE_X1;
   } else {
-    startPosX.x = GetScreenWidth() - BORDER_X2 + BORDER_OUTLINE_X2 / 2;
-    endPosX.x = BORDER_X1 - BORDER_OUTLINE_X1 / 2;
+    startPosX.x = GetScreenWidth() - BORDER_X2 + BORDER_OUTLINE_X2;
+    endPosX.x = BORDER_X1 - BORDER_OUTLINE_X1;
   }
   DrawLineV(startPosX, endPosX, RAYWHITE);
   DrawCoordinateSystemMarkersX(CLITERAL(Vector2){startPosX.x, endPosX.x},
