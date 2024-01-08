@@ -20,6 +20,7 @@
 int size = 1;
 Vector2 *data;
 int data_elements = 0;
+Vector2 MaximumValues = {-INFINITY, -INFINITY};
 
 // the plan:
 // 1. 2d scatter plots [DONE]
@@ -63,8 +64,7 @@ void DrawHandler(Vector2 new_data, Vector2 *data[]) {
   // adds new points
 }
 
-// FIXME: this needs to track a plot or smth
-int CreatePlot(Vector2 new_data[], int data_length) {
+int UpdatePlot(Vector2 new_data[], int data_length) {
   // i want this to automatically create the array that tracks all data
   // such that you only pass new data to it
   size = data_elements + data_length;
@@ -84,10 +84,16 @@ int CreatePlot(Vector2 new_data[], int data_length) {
   }
   data_elements += curr_data_elements;
 
+  // clear background
+  Color gruvbox_background = GetColor(0x282828AA);
+  ClearBackground(gruvbox_background);
   // recalculate min/max
   // recalculate origin
+  Vector2 origin = GetOrigin(GetDataMin(data, size), GetDataMax(data, size));
   // redraw coordinate system
+  DrawCoordinateSystem(origin, MaximumValues);
   // add all points into plot
+  DrawPoints2D(data, origin, RED, 2, &MaximumValues, size);
 
   return 0;
 }
@@ -98,7 +104,6 @@ int main(void) {
     printf("Array not allocated!");
     return 1;
   }
-  Vector2 MaximumValues = {-INFINITY, -INFINITY};
   SetConfigFlags(FLAG_WINDOW_RESIZABLE);
   InitWindow(400, 224, "rayplot");
 
@@ -108,12 +113,12 @@ int main(void) {
 
   unsigned long data_size = sizeof(data_down_left) / sizeof(data_down_left[0]);
 
-  CreatePlot(data_down_left, data_size);
+  UpdatePlot(data_down_left, data_size);
 
   Vector2 test_up_both[] = {{-200, 400}, {-400, 200}, {600, 100}, {80, 200}};
   unsigned long data_size2 = sizeof(test_up_both) / sizeof(test_up_both[0]);
 
-  CreatePlot(test_up_both, data_size2);
+  UpdatePlot(test_up_both, data_size2);
 
   while (!WindowShouldClose()) {
     BeginDrawing();
