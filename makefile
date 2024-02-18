@@ -1,4 +1,4 @@
-CC=clang
+CC=cc
 CFLAGS=-Ilibs -Llibs/ -framework IOKit -framework Cocoa -framework OpenGL libs/libraylib.a
 OBJ = main.c
 
